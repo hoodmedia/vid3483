@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hood Media</title>
+<title>HotScope TV</title>
 
 <style>
 *{
@@ -28,7 +28,7 @@ max-width:420px;
 position:relative;
 }
 
-/* IKLAN ATAS & BAWAH */
+/* IKLAN */
 .ad-box{
 width:100%;
 margin:12px 0;
@@ -49,14 +49,14 @@ margin:12px 0;
 text-align:center;
 }
 
-/* 🔥 OVERLAY IKLAN */
+/* OVERLAY IKLAN */
 .overlay-ad{
 position:absolute;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.85);
+background:rgba(0,0,0,0.9);
 display:none;
 justify-content:center;
 align-items:center;
@@ -79,6 +79,7 @@ border:none;
 border-radius:6px;
 cursor:pointer;
 font-size:12px;
+display:none;
 }
 </style>
 </head>
@@ -87,35 +88,32 @@ font-size:12px;
 
 <div class="container">
 
-<!-- IKLAN ATAS -->
+<!-- 🔝 IKLAN ATAS -->
 <div class="ad-box">
-<!-- <iframe src="https://www.highperformanceformat.com/2b7e76e37b7f6c2fc55e3b3cc5249be3/"
-width="320" height="50" frameborder="0"></iframe>
- -->
+<!-- PASTE IKLAN ATAS DI SINI -->
 </div>
 
+<!-- VIDEO -->
 <video id="videoPlayer" controls autoplay muted playsinline>
 <source id="videoSource" src="" type="video/mp4">
 </video>
 
-<!-- IKLAN BAWAH -->
+<!-- 🔽 IKLAN BAWAH -->
 <div class="ad-box">
-<!-- <iframe src="https://www.highperformanceformat.com/2b7e76e37b7f6c2fc55e3b3cc5249be3/"
-width="320" height="50" frameborder="0"></iframe>
- -->
+<!-- PASTE IKLAN BAWAH DI SINI -->
 </div>
 
 <div class="title">
 Watch till the end 😳🔥
 </div>
 
-<!-- 🔥 https://www.profitablecpmratenetwork.com/fut0gi5x?key=fc9ef4212d7629163d3f1e0263d3394a -->
+<!-- 🔥 OVERLAY IKLAN -->
 <div class="overlay-ad" id="overlayAd">
-<div class="content">
+<div class="content" id="adContent">
 
-<!-- https://www.profitablecpmratenetwork.com/fut0gi5x?key=fc9ef4212d7629163d3f1e0263d3394a -->
+<!-- IKLAN AKAN DIMUAT DI SINI -->
 
-<button class="close-btn" onclick="closeAd()">Close</button>
+<button class="close-btn" id="closeBtn" onclick="closeAd()">Close</button>
 
 </div>
 </div>
@@ -123,13 +121,17 @@ Watch till the end 😳🔥
 </div>
 
 <script>
-// ambil parameter ?v=
+// ===============================
+// AMBIL PARAMETER VIDEO
+// ===============================
 const params = new URLSearchParams(window.location.search);
 const videoId = params.get("v");
 
 const video = document.getElementById("videoPlayer");
 const source = document.getElementById("videoSource");
 const overlay = document.getElementById("overlayAd");
+const adContent = document.getElementById("adContent");
+const closeBtn = document.getElementById("closeBtn");
 
 if(videoId){
 source.src = "https://cdn.videy.co/" + videoId + ".mp4";
@@ -138,15 +140,51 @@ video.load();
 document.querySelector(".title").innerText = "Video tidak ditemukan";
 }
 
-// 🔥 EVENT: video selesai
+// ===============================
+// LOAD IKLAN (INJECT SCRIPT)
+// ===============================
+function loadAd(){
+adContent.insertAdjacentHTML("afterbegin", `
+<script>
+  atOptions = {
+    'key' : '2b7e76e37b7f6c2fc55e3b3cc5249be3',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+<\/script>
+<script src="https://www.highperformanceformat.com/2b7e76e37b7f6c2fc55e3b3cc5249be3/invoke.js"><\/script>
+`);
+}
+
+// ===============================
+// EVENT: VIDEO SELESAI
+// ===============================
 video.addEventListener("ended", function(){
 overlay.style.display = "flex";
+loadAd();
+
+// tombol close muncul setelah 5 detik
+setTimeout(()=>{
+closeBtn.style.display = "inline-block";
+}, 5000);
 });
 
-// tombol close iklan
+// ===============================
+// TOMBOL CLOSE
+// ===============================
 function closeAd(){
 overlay.style.display = "none";
 }
+
+// ===============================
+// BONUS: UNMUTE SAAT KLIK VIDEO
+// ===============================
+video.addEventListener("click", () => {
+video.muted = false;
+video.play();
+});
 </script>
 
 </body>
